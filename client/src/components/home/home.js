@@ -1,7 +1,6 @@
 import { useEffect , useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as api from '../../api/index.js';
-import './home.css';
 import { Card, Table } from 'react-bootstrap';
 import { useOutletContext } from "react-router-dom";
 

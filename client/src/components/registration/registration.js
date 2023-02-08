@@ -22,15 +22,6 @@ const Registration = () => {
             const response = await api.getAllRunningCourses();
             setData(response.data.courses.map((obj,i) => ({id: i ,...obj})));
             setRegistered(response.data.registered);
-            // setRegister(data.filter((ele) => {
-            //     return register.some((item) => {
-            //         if(ele.courseid === item.courseid) {
-            //             return true;
-            //         }
-            //         return false;
-            //     }) ? true : false;
-            // }));
-            // console.log(register);
             console.log(data)
             return Promise.resolve(response.data.courses);
         }
@@ -50,7 +41,7 @@ const Registration = () => {
         try{
             if(item.length === 0 || !item) return;
             const response = await api.registerCourses({courseid:item.courseid,secid:item.sec_id});
-            setRegister(register.filter((obj) => obj.id !== item.id));
+            setRegister(register.filter((obj) => obj.courseid !== item.courseid));
             setRegistered([...registered,item]);
             return Promise.resolve(response.data.courses);
         }
@@ -74,7 +65,7 @@ const Registration = () => {
         try{
             if(item.length === 0 || !item) return;
             const response = await api.dropCourses({courseid:item.courseid,secid:item.sec_id});
-            setRegistered(registered.filter((obj) => obj.id !== item.id));
+            setRegistered(registered.filter((obj) => obj.courseid !== item.courseid));
             return Promise.resolve(response.data.courses);
         }
         catch (error) {
@@ -111,7 +102,7 @@ const Registration = () => {
       }
 
       const handleDelete = (item) => {
-        setRegister(register.filter((obj) => obj.id !== item.id));
+        setRegister(register.filter((obj) => obj.courseid !== item.courseid));
         }
 
         const handleRegister = (item) => {
@@ -161,7 +152,7 @@ const Registration = () => {
                                     <td>{ele.courseid}</td>
                                     <td>{ele.title}</td>
                                     <td>{ele.sec_id}</td>
-                                    {ele.taken === "TRUE" ? <td>already taken</td> : (ele.slotclash === "TRUE" ? <td>slot clash</td> : (ele.prereq === "FALSE" ? <td>Prerequisite Not satisfied</td> : <td><Button onClick={() => handleRegister(ele)}>Register</Button></td>))}
+                                    {ele.taken === "TRUE" ? <td>already taken</td> : (ele.prereq === "FALSE" ? <td>Prerequisite Not satisfied</td> : (ele.slotclash === "TRUE" ? <td>slot clash</td> : <td><Button onClick={() => handleRegister(ele)}>Register</Button></td>))}
                                     <td><Button onClick={() => handleDelete(ele)}>Delete</Button></td>
                                 </tr>
                             )
