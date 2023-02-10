@@ -35,6 +35,10 @@ const LoginPage = (props) => {
             }
             const response = await api.login(user);
             if (response.status === 200) {
+                if(response.data.instructor==='TRUE'){
+                  alert('Instructor login approved by backend frontend not implemented');
+                  return;
+                }
                 props.setUser({ userId:user.userId , username:response.data.username});
                 navigate('/home');
                 return;

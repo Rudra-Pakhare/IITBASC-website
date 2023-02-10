@@ -24,10 +24,14 @@ export const handleLogin = async (req, res) => {
         if (isPasswordCorrect) {
             req.session.userId = userId;
             const data = await client.query(`SELECT name,dept_name,tot_cred FROM student WHERE id = '${userId}'`);
+            if(data.rows.length===0){
+                res.status(200).json({ message: 'Login successful', instructor: 'TRUE' });
+                return;
+            }
             req.session.username = data.rows[0].name;
             req.session.department = data.rows[0].dept_name;
             req.session.totalCredits = data.rows[0].tot_cred;
-            res.status(200).json({ message: 'Login successful', username: data.rows[0].name });
+            res.status(200).json({ message: 'Login successful', username: data.rows[0].name , instructor: 'FALSE' });
         }
         else {
             res.status(400).json({ message: 'Login failed' });
