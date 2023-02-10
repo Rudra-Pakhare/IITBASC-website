@@ -39,9 +39,9 @@ const LoginPage = (props) => {
                   alert('Instructor login approved by backend frontend not implemented');
                   return;
                 }
-                props.setUser({ userId:user.userId , username:response.data.username});
+                else {props.setUser({ userId:user.userId , username:response.data.username});
                 navigate('/home');
-                return;
+                return;}
             }
             else {
                 console.log('Login failed');
