@@ -32,7 +32,7 @@ const Course = () => {
     },[courseid]);
 
     return (
-        <div className="running_courses" style={{margin:'50px 15% 50px 15%'}}>
+        <div className="running_courses" style={{margin:'50px'}}>
             <div style={{margin:'25px 0px 25px 0px'}}><SemisterCard course={data}/></div>
         </div>
     );

@@ -22,7 +22,6 @@ const Registration = () => {
             const response = await api.getAllRunningCourses();
             setData(response.data.courses.map((obj,i) => ({id: i ,...obj})));
             setRegistered(response.data.registered);
-            console.log(data)
             return Promise.resolve(response.data.courses);
         }
         catch (error) {
@@ -66,6 +65,10 @@ const Registration = () => {
             if(item.length === 0 || !item) return;
             const response = await api.dropCourses({courseid:item.courseid,secid:item.sec_id});
             setRegistered(registered.filter((obj) => obj.courseid !== item.courseid));
+            setRegister(register.map((ele) => {
+                if(ele.courseid === item.courseid){ele.taken='FALSE';ele.slotclash='FALSE';return ele;}; 
+                return ele;
+            }));
             return Promise.resolve(response.data.courses);
         }
         catch (error) {
@@ -123,7 +126,7 @@ const Registration = () => {
         )
       }
     return (
-        <div className="running_courses" style={{margin:'50px 300px 50px 300px'}}>
+        <div style={{margin:'50px 100px 50px 100px'}}>
             <ReactSearchAutocomplete
             fuseOptions={{ keys: ["title","courseid"] }}
             items={data}

@@ -59,8 +59,19 @@ export const coursesTaken = async (req, res) => {
             res.status(400).json({ message: 'Not logged in' });
             return;
         }
-        const courses = await client.query(`SELECT takes.course_id,semester,year,grade,title,credits FROM takes,course WHERE id = '${req.session.userId}' AND takes.course_id=course.course_id ORDER BY year DESC,semester DESC`);
-        res.status(200).json({ courses: courses.rows });
+        const today = Date.now();
+        const reg = await client.query(`SELECT semester,year,start_time FROM reg_dates ORDER BY year DESC,start_time DESC`);
+        var i=0;
+        for(;i<reg.rows.length;i++){
+            if(Date.parse(reg.rows[0].start_time) <= today){
+                break;
+            }
+        }
+        const currentSemester = reg.rows[i].semester;
+        const currentYear = reg.rows[i].year;
+        const currcourses = await client.query(`SELECT takes.course_id,semester,year,grade,title,credits FROM takes,course WHERE id = '${req.session.userId}' AND takes.course_id=course.course_id AND year='${currentYear}' AND semester='${currentSemester}'`);
+        const courses = await client.query(`SELECT takes.course_id,semester,year,grade,title,credits FROM takes,course WHERE id = '${req.session.userId}' AND takes.course_id=course.course_id AND (year<>'${currentYear}' OR semester<>'${currentSemester}') ORDER BY year DESC,semester DESC`);
+        res.status(200).json({ courses: courses.rows , currcourse:currcourses.rows});
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Something went wrong' });
@@ -86,9 +97,16 @@ export const getRunningCourses = async (req, res) => {
             res.status(400).json({ message: 'Not logged in' });
             return;
         }
-        const courses = await client.query(`SELECT semester,year FROM reg_dates ORDER BY year DESC,semester DESC`);
-        const currentSemester = courses.rows[0].semester;
-        const currentYear = courses.rows[0].year;
+        const today = Date.now();
+        const reg = await client.query(`SELECT semester,year,start_time FROM reg_dates ORDER BY year DESC,start_time DESC`);
+        var i=0;
+        for(;i<reg.rows.length;i++){
+            if(Date.parse(reg.rows[0].start_time) <= today){
+                break;
+            }
+        }
+        const currentSemester = reg.rows[i].semester;
+        const currentYear = reg.rows[i].year;
         const department = await client.query(`SELECT distinct dept_name FROM course,section WHERE semester = '${currentSemester}' AND year = '${currentYear}' AND course.course_id=section.course_id`);
         res.status(200).json({ department: department.rows });
     } catch (error) {
@@ -104,9 +122,16 @@ export const getRunningCourse = async (req, res) => {
             res.status(400).json({ message: 'Not logged in' });
             return;
         }
-        const reg = await client.query(`SELECT semester,year FROM reg_dates ORDER BY year DESC,semester DESC`);
-        const currentSemester = reg.rows[0].semester;
-        const currentYear = reg.rows[0].year;
+        const today = Date.now();
+        const reg = await client.query(`SELECT semester,year,start_time FROM reg_dates ORDER BY year DESC,start_time DESC`);
+        var i=0;
+        for(;i<reg.rows.length;i++){
+            if(Date.parse(reg.rows[0].start_time) <= today){
+                break;
+            }
+        }
+        const currentSemester = reg.rows[i].semester;
+        const currentYear = reg.rows[i].year;
         const query1 = `SELECT course.course_id as courseid,title,sec_id FROM course,section WHERE semester = '${currentSemester}' AND year = '${currentYear}' AND course.course_id=section.course_id AND dept_name = '${dept_name}'`;
         const query2 = `with S as (${query1}) SELECT courseid,title,ID,S.sec_id as secid FROM teaches,S WHERE teaches.course_id=S.courseid AND teaches.semester='${currentSemester}' AND teaches.year='${currentYear}' AND teaches.sec_id=S.sec_id`;
         const dept = await client.query(`with T as (${query2}) SELECT courseid,title,T.ID,name,secid FROM T,instructor WHERE T.ID=instructor.ID`);
@@ -124,9 +149,16 @@ export const getCourse = async (req, res) => {
             res.status(400).json({ message: 'Not logged in' });
             return;
         }
-        const reg = await client.query(`SELECT semester,year FROM reg_dates ORDER BY year DESC,semester DESC`);
-        const currentSemester = reg.rows[0].semester;
-        const currentYear = reg.rows[0].year;
+        const today = Date.now();
+        const reg = await client.query(`SELECT semester,year,start_time FROM reg_dates ORDER BY year DESC,start_time DESC`);
+        var i=0;
+        for(;i<reg.rows.length;i++){
+            if(Date.parse(reg.rows[0].start_time) <= today){
+                break;
+            }
+        }
+        const currentSemester = reg.rows[i].semester;
+        const currentYear = reg.rows[i].year;
         const query1 = `SELECT * FROM course,section WHERE semester = '${currentSemester}' AND year = '${currentYear}' AND course.course_id=section.course_id AND course.course_id = '${id}'`;
         const query2 = `with S as (${query1}) SELECT * FROM teaches,S WHERE teaches.course_id= '${id}' AND teaches.semester='${currentSemester}' AND teaches.year='${currentYear}' AND teaches.sec_id=S.sec_id`;
         const course = await client.query(`with T as (${query2}) SELECT * FROM T,instructor WHERE T.ID=instructor.ID`);
@@ -151,9 +183,16 @@ export const getInstructor = async (req, res) => {
             res.status(400).json({ message: 'Not logged in' });
             return;
         }
-        const reg = await client.query(`SELECT semester,year FROM reg_dates ORDER BY year DESC,semester DESC`);
-        const currentSemester = reg.rows[0].semester;
-        const currentYear = reg.rows[0].year;
+        const today = Date.now();
+        const reg = await client.query(`SELECT semester,year,start_time FROM reg_dates ORDER BY year DESC,start_time DESC`);
+        var i=0;
+        for(;i<reg.rows.length;i++){
+            if(Date.parse(reg.rows[0].start_time) <= today){
+                break;
+            }
+        }
+        const currentSemester = reg.rows[i].semester;
+        const currentYear = reg.rows[i].year;
         const query1 = `SELECT distinct course_id FROM teaches WHERE semester = '${currentSemester}' AND year = '${currentYear}' AND ID = '${id}'`;
         const query2 = `with S as (${query1}) SELECT * FROM course,S WHERE course.course_id=S.course_id`;
         const course = await client.query(`${query2} ORDER BY course.course_id`);
@@ -173,9 +212,16 @@ export const getAllRunningCourses = async (req, res) => {
             res.status(400).json({ message: 'Not logged in' });
             return;
         }
-        const reg = await client.query(`SELECT semester,year FROM reg_dates ORDER BY year DESC,semester DESC`);
-        const currentSemester = reg.rows[0].semester;
-        const currentYear = reg.rows[0].year;
+        const today = Date.now();
+        const reg = await client.query(`SELECT semester,year,start_time FROM reg_dates ORDER BY year DESC,start_time DESC`);
+        var i=0;
+        for(;i<reg.rows.length;i++){
+            if(Date.parse(reg.rows[0].start_time) <= today){
+                break;
+            }
+        }
+        const currentSemester = reg.rows[i].semester;
+        const currentYear = reg.rows[i].year;
         const query2 = `SELECT takes.course_id as courseid,sec_id,title FROM takes,course WHERE takes.semester = '${currentSemester}' AND takes.year = '${currentYear}' AND ID = '${req.session.userId}' AND takes.course_id=course.course_id AND grade IS NULL`;
         const querycoursestaken = `SELECT distinct T.course_id FROM takes as T WHERE ID = '${req.session.userId}'`;
         const query3 = `SELECT section.time_slot_id FROM section,takes WHERE ID = '${req.session.userId}' AND section.course_id=takes.course_id AND section.semester=takes.semester AND section.year=takes.year AND section.sec_id=takes.sec_id AND section.year='${currentYear}' AND section.semester='${currentSemester}'`;
@@ -196,9 +242,16 @@ export const registerCourses = async (req, res) => {
             res.status(400).json({ message: 'Not logged in' });
             return;
         }
-        const reg = await client.query(`SELECT semester,year FROM reg_dates ORDER BY year DESC,semester DESC`);
-        const currentSemester = reg.rows[0].semester;
-        const currentYear = reg.rows[0].year;
+        const today = Date.now();
+        const reg = await client.query(`SELECT semester,year,start_time FROM reg_dates ORDER BY year DESC,start_time DESC`);
+        var i=0;
+        for(;i<reg.rows.length;i++){
+            if(Date.parse(reg.rows[0].start_time) <= today){
+                break;
+            }
+        }
+        const currentSemester = reg.rows[i].semester;
+        const currentYear = reg.rows[i].year;
         await client.query('INSERT INTO takes (ID,course_id,sec_id,semester,year) VALUES ($1,$2,$3,$4,$5)',[req.session.userId,courseid,secid,currentSemester,currentYear]);
         res.status(200).json({ message: 'Registered' });
     }
@@ -215,9 +268,16 @@ export const dropCourses = async (req, res) => {
             res.status(400).json({ message: 'Not logged in' });
             return;
         }
-        const reg = await client.query(`SELECT semester,year FROM reg_dates ORDER BY year DESC,semester DESC`);
-        const currentSemester = reg.rows[0].semester;
-        const currentYear = reg.rows[0].year;
+        const today = Date.now();
+        const reg = await client.query(`SELECT semester,year,start_time FROM reg_dates ORDER BY year DESC,start_time DESC`);
+        var i=0;
+        for(;i<reg.rows.length;i++){
+            if(Date.parse(reg.rows[0].start_time) <= today){
+                break;
+            }
+        }
+        const currentSemester = reg.rows[i].semester;
+        const currentYear = reg.rows[i].year;
         await client.query(`DELETE FROM takes WHERE ID='${req.session.userId}' AND course_id='${courseid}' AND sec_id='${secid}' AND semester='${currentSemester}' AND year='${currentYear}'`);
         const query2 = `SELECT takes.course_id as courseid,sec_id,title FROM takes,course WHERE takes.semester = '${currentSemester}' AND takes.year = '${currentYear}' AND ID = '${req.session.userId}' AND takes.course_id=course.course_id AND grade IS NULL`;
         const registered = await client.query(`${query2}`);

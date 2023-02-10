@@ -1,6 +1,6 @@
 import express from 'express';
-import { handleLogin, handleLogout, coursesTaken , getUser , getRunningCourses , getRunningCourse , getCourse , getInstructor} from '../controllers/appControllers.js';
-import { getAllRunningCourses,registerCourses,dropCourses } from '../controllers/appControllers.js';
+import { handleLogin, handleLogout, coursesTaken , getUser , getRunningCourses , getRunningCourse , getCourse , getInstructor} from '../services/appServices.js';
+import { getAllRunningCourses,registerCourses,dropCourses } from '../services/appServices.js';
 const router = express.Router();
 
 router.post('/login', handleLogin);

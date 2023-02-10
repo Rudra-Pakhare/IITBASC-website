@@ -6,7 +6,7 @@ import { useOutletContext } from "react-router-dom";
 
 const HomePage = () => {
     const navigate = useNavigate();
-    const [data,setData] = useState([]);
+    const [data,setData] = useState({});
     const [semesters,setSemesters] = useState([]);
     const user = useOutletContext();
     if (!user.user) {
@@ -16,7 +16,7 @@ const HomePage = () => {
     const getData = async () => {
         try{
             const response = await api.coursesTaken();
-            setData(response.data.courses);
+            setData(response.data);
             return Promise.resolve(response.data.courses);
         }
         catch (error) {
@@ -26,28 +26,32 @@ const HomePage = () => {
 
     useEffect(() => {
         async function fetchData() {
-            const data = await getData()
+            const data1 = await getData()
             var sem = [];
             var sems = [];
-            var prevsem = data[0].semester;
-            var prevyear = data[0].year;
-            for(let i=0;i<data.length;i++){
-                if(data[i].semester !== prevsem || data[i].year !== prevyear){
+            var prevsem = data1[0].semester;
+            var prevyear = data1[0].year;
+            for(let i=0;i<data1.length;i++){
+                if(data1[i].semester !== prevsem || data1[i].year !== prevyear){
                     sems.push(sem);
                     sem = [];
-                    prevsem = data[i].semester;
-                    prevyear = data[i].year;
+                    prevsem = data1[i].semester;
+                    prevyear = data1[i].year;
                 }
-                sem.push(data[i]);
+                sem.push(data1[i]);
             }
             sems.push(sem);
             setSemesters(sems); 
         }
         fetchData();
-    },[data]);
+    },[]);
 
     return (
-        <div className="home" style={{margin:'50px 300px 50px 300px'}}>
+        <div className="home" style={{margin:'50px 50px 50px 50px'}}>
+            <div>
+                <h6>Current Semester Details</h6>
+            </div>
+            <div style={{margin:'25px 0px 25px 0px'}}><SemisterCard sem={data.currcourse}/></div>
             <div>
                 <h6>Semester-wise Details</h6>
             </div>
@@ -62,7 +66,7 @@ const HomePage = () => {
 export default HomePage;
 
 function SemisterCard(props) {
-    return !props.sem[0]? null :(
+    return !props.sem? null :(
     <Card  className="text-center">
       <Card.Header>{props.sem[0].semester} {props.sem[0].year}</Card.Header>
       <Card.Body>
