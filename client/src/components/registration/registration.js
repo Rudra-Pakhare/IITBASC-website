@@ -41,7 +41,7 @@ const Registration = () => {
             if(item.length === 0 || !item) return;
             const response = await api.registerCourses({courseid:item.courseid,secid:item.sec_id});
             setRegister(register.filter((obj) => obj.courseid !== item.courseid));
-            setRegistered([...registered,item]);
+            await getData();
             return Promise.resolve(response.data.courses);
         }
         catch (error) {
@@ -54,21 +54,17 @@ const Registration = () => {
             await registerData(course);
         }
         regData();
-        async function fetchData() {
-            await getData();
-        }
-        fetchData();
     },[course]);
 
     const dropCourse = async (item) => {
         try{
             if(item.length === 0 || !item) return;
             const response = await api.dropCourses({courseid:item.courseid,secid:item.sec_id});
-            setRegistered(registered.filter((obj) => obj.courseid !== item.courseid));
             setRegister(register.map((ele) => {
                 if(ele.courseid === item.courseid){ele.taken='FALSE';ele.slotclash='FALSE';return ele;}; 
                 return ele;
             }));
+            await getData();
             return Promise.resolve(response.data.courses);
         }
         catch (error) {
@@ -81,10 +77,6 @@ const Registration = () => {
             await dropCourse(coursedrop);
         }
         dropData();
-        async function fetchData() {
-            await getData();
-        }
-        fetchData();
     },[coursedrop]);
 
     const handleOnSearch = (string, results) => {
@@ -163,14 +155,14 @@ const Registration = () => {
                     }
                 </tbody>
             </Table>)}
-            <div style={{margin:'25px 0px 25px 0px'}}><SemisterCard courses={registered} handleDrop={handleDrop}/></div>
+            <div style={{margin:'25px 0px 25px 0px'}}><RegistrationCard courses={registered} handleDrop={handleDrop}/></div>
         </div>
     );
 }
 
 export default Registration;
 
-function SemisterCard(props) {
+function RegistrationCard(props) {
 
     return (
     <Card  className="text-center">

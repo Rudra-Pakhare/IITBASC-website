@@ -32,14 +32,14 @@ const RunningCourses = () => {
 
     return (
         <div className="running_courses" style={{margin:'50px 300px 50px 300px'}}>
-            <div style={{margin:'25px 0px 25px 0px'}}><SemisterCard dept={data}/></div>
+            <div style={{margin:'25px 0px 25px 0px'}}><RunningCoursesCard dept={data}/></div>
         </div>
     );
 }
 
 export default RunningCourses;
 
-function SemisterCard(props) {
+function RunningCoursesCard(props) {
     return (
     <Card  className="text-center">
       <Card.Header>Running Courses</Card.Header>

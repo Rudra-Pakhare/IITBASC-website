@@ -33,15 +33,15 @@ const Course = () => {
 
     return (
         <div className="running_courses" style={{margin:'50px'}}>
-            <div style={{margin:'25px 0px 25px 0px'}}><SemisterCard course={data}/></div>
+            <div style={{margin:'25px 0px 25px 0px'}}><CourseCard course={data}/></div>
         </div>
     );
 }
 
 export default Course;
 
-function SemisterCard(props) {
-    return !props.course.courses ? null : (
+function CourseCard(props) {
+    return !props.course.courses || props.course.courses.length === 0 ? null : (
     <Card>
       <Card.Header>
         <h6>Course Id : {props.course.courses[0].course_id}</h6>

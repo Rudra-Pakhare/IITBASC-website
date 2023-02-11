@@ -66,7 +66,7 @@ const HomePage = () => {
 export default HomePage;
 
 function SemisterCard(props) {
-    return !props.sem? null :(
+    return !props.sem || props.sem.length === 0? null :(
     <Card  className="text-center">
       <Card.Header>{props.sem[0].semester} {props.sem[0].year}</Card.Header>
       <Card.Body>

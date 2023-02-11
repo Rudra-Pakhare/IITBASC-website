@@ -40,15 +40,15 @@ const Instructor = () => {
         <Card.Subtitle className="mb-2 text-muted">Department {data.instructor[0].dept_name}</Card.Subtitle>
       </Card.Body>
     </Card> }
-                <SemisterCard inst={data.coursecurr} curr={true}/>
-                <SemisterCard inst={data.courseprev} curr={false}/>
+                <InstructorCard inst={data.coursecurr} curr={true}/>
+                <InstructorCard inst={data.courseprev} curr={false}/>
         </div>
     );
 }
 
 export default Instructor;
 
-function SemisterCard(props) {
+function InstructorCard(props) {
     return !props.inst ? null : (
     <Card border="light" style={{marginTop:'10px'}}>
       <Card.Header>

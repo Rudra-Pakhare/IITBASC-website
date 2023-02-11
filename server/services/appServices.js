@@ -68,7 +68,7 @@ export const coursesTaken = async (req, res) => {
         const reg = await client.query(`SELECT semester,year,start_time FROM reg_dates ORDER BY year DESC,start_time DESC`);
         var i=0;
         for(;i<reg.rows.length;i++){
-            if(Date.parse(reg.rows[0].start_time) <= today){
+            if(Date.parse(reg.rows[i].start_time) <= today){
                 break;
             }
         }
@@ -106,7 +106,7 @@ export const getRunningCourses = async (req, res) => {
         const reg = await client.query(`SELECT semester,year,start_time FROM reg_dates ORDER BY year DESC,start_time DESC`);
         var i=0;
         for(;i<reg.rows.length;i++){
-            if(Date.parse(reg.rows[0].start_time) <= today){
+            if(Date.parse(reg.rows[i].start_time) <= today){
                 break;
             }
         }
@@ -131,7 +131,7 @@ export const getRunningCourse = async (req, res) => {
         const reg = await client.query(`SELECT semester,year,start_time FROM reg_dates ORDER BY year DESC,start_time DESC`);
         var i=0;
         for(;i<reg.rows.length;i++){
-            if(Date.parse(reg.rows[0].start_time) <= today){
+            if(Date.parse(reg.rows[i].start_time) <= today){
                 break;
             }
         }
@@ -158,7 +158,7 @@ export const getCourse = async (req, res) => {
         const reg = await client.query(`SELECT semester,year,start_time FROM reg_dates ORDER BY year DESC,start_time DESC`);
         var i=0;
         for(;i<reg.rows.length;i++){
-            if(Date.parse(reg.rows[0].start_time) <= today){
+            if(Date.parse(reg.rows[i].start_time) <= today){
                 break;
             }
         }
@@ -192,7 +192,7 @@ export const getInstructor = async (req, res) => {
         const reg = await client.query(`SELECT semester,year,start_time FROM reg_dates ORDER BY year DESC,start_time DESC`);
         var i=0;
         for(;i<reg.rows.length;i++){
-            if(Date.parse(reg.rows[0].start_time) <= today){
+            if(Date.parse(reg.rows[i].start_time) <= today){
                 break;
             }
         }
@@ -221,7 +221,7 @@ export const getAllRunningCourses = async (req, res) => {
         const reg = await client.query(`SELECT semester,year,start_time FROM reg_dates ORDER BY year DESC,start_time DESC`);
         var i=0;
         for(;i<reg.rows.length;i++){
-            if(Date.parse(reg.rows[0].start_time) <= today){
+            if(Date.parse(reg.rows[i].start_time) <= today){
                 break;
             }
         }
@@ -251,7 +251,7 @@ export const registerCourses = async (req, res) => {
         const reg = await client.query(`SELECT semester,year,start_time FROM reg_dates ORDER BY year DESC,start_time DESC`);
         var i=0;
         for(;i<reg.rows.length;i++){
-            if(Date.parse(reg.rows[0].start_time) <= today){
+            if(Date.parse(reg.rows[i].start_time) <= today){
                 break;
             }
         }
@@ -277,7 +277,7 @@ export const dropCourses = async (req, res) => {
         const reg = await client.query(`SELECT semester,year,start_time FROM reg_dates ORDER BY year DESC,start_time DESC`);
         var i=0;
         for(;i<reg.rows.length;i++){
-            if(Date.parse(reg.rows[0].start_time) <= today){
+            if(Date.parse(reg.rows[i].start_time) <= today){
                 break;
             }
         }

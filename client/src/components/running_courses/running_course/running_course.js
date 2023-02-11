@@ -50,8 +50,6 @@ function SemisterCard(props) {
                 <tr>
                     <th>Course Id</th>
                     <th>Course Title</th>
-                    {/* <th>Section</th>
-                    <th>Instructor</th> */}
                 </tr>
             </thead>
             <tbody>
@@ -61,8 +59,6 @@ function SemisterCard(props) {
                             <tr key={index}>
                                 <td><Link to={`/course/${ele.courseid}`}>{ele.courseid}</Link></td>
                                 <td>{ele.title}</td>
-                                {/* <td>{ele.secid}</td>
-                                <td><Link to={`/instructor/${ele.id}`}>{ele.name}</Link></td> */}
                             </tr>
                         )
                     })
